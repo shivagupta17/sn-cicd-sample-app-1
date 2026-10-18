@@ -38,14 +38,14 @@ jobs:
       - name: Build ServiceNow Application
         run: pnpm run build
 
-      # 6. Inline OAuth Handshake (Replaces the action.yml entirely)
+      # 6. Inline OAuth Handshake with absolute string escaping
       - name: Configure OAuth Authentication Environment
         run: |
           echo "SN_SDK_NODE_ENV=SN_SDK_CI_INSTALL" >> "$GITHUB_ENV"
           echo "SN_SDK_AUTH_TYPE=${{ vars.SN_SDK_TEST_AUTH_TYPE }}" >> "$GITHUB_ENV"
           echo "SN_SDK_INSTANCE_URL=${{ vars.SN_SDK_TEST_INSTANCE_URL }}" >> "$GITHUB_ENV"
-          echo "SN_SDK_OAUTH_CLIENT_ID=${{ secrets.SN_SDK_TEST_OAUTH_CLIENT_ID }}" >> "$GITHUB_ENV"
-          echo "SN_SDK_OAUTH_CLIENT_SECRET=${{ secrets.SN_SDK_TEST_OAUTH_CLIENT_SECRET }}" >> "$GITHUB_ENV"
+          echo "SN_SDK_OAUTH_CLIENT_ID='${{ secrets.SN_SDK_TEST_OAUTH_CLIENT_ID }}'" >> "$GITHUB_ENV"
+          echo "SN_SDK_OAUTH_CLIENT_SECRET='${{ secrets.SN_SDK_TEST_OAUTH_CLIENT_SECRET }}'" >> "$GITHUB_ENV"
 
       # 7. Deploy using the explicit host parameter so the SDK catches the OAuth environment variables
       - name: Install App to TEST
