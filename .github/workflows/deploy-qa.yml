@@ -38,14 +38,17 @@ jobs:
       - name: Build ServiceNow Application
         run: pnpm run build
 
-      # 6. Authenticate with the TEST instance using OAuth
+      # 6. Authenticate with the TEST instance using the new syntax format
       - name: Authenticate with TEST Instance
         run: |
-          npx now-sdk auth \
-            --host "${{ secrets.SN_SDK_TEST_INSTANCE_URL }}" \
-            --auth-type "${{ secrets.SN_SDK_TEST_AUTH_TYPE }}" \
-            --client-id "${{ secrets.SN_SDK_TEST_OAUTH_CLIENT_ID }}" \
-            --client-secret "${{ secrets.SN_SDK_TEST_OAUTH_CLIENT_SECRET }}"
+          npx now-sdk auth --add "${{ secrets.SN_SDK_TEST_INSTANCE_URL }}" \
+            --type "${{ secrets.SN_SDK_TEST_AUTH_TYPE }}" \
+            --alias "test-instance" \
+            --username "NotRequiredForOAuth" \
+            --password "NotRequiredForOAuth"
+          
+          # Set the newly added alias as the active choice for the installer
+          npx now-sdk auth --use "test-instance"
 
       # 7. Deploy the compiled package onto productdemo
       - name: Install App to TEST
