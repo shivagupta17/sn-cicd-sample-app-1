@@ -1,0 +1,15 @@
+{
+  "scope": "x_snc_sample1",
+  "scopeId": "736e4970d2704f9ea863b1f41702e522",
+  "name": "CICD sample 1",
+  "metadataDir": "src/plugin-xmls",
+  "appOutputDir": "dist-metadata/app",
+  "packageSourceCodeOnInstance": true,
+  "staticContent": {
+    "assets": {
+      "./public/**": {
+        "publicPath": "[$config.aiux.basename]/public"
+      }
+    }
+  }
+}
