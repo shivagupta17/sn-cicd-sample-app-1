@@ -1,43 +1,47 @@
 name: Deploy Application to TEST (ProductDemo)
 
 on:
-  push:
-    branches:
-      - qa
-  pull_request:
-    branches:
-      - qa
+push:
+branches:
+- qa
+pull_request:
+branches:
+- qa
 
 jobs:
-  deploy-to-test:
-    runs-on: ubuntu-latest
+deploy-to-test:
+runs-on: ubuntu-latest
 
-    steps:
-      # 1. Fetch your code from the GitHub repository
-      - name: Checkout Code
-        uses: actions/checkout@v4
+steps:
+# 1. Fetch your code from the GitHub repository
+- name: Checkout Code
+uses: actions/checkout@v4
 
-      # 2. Set up Node.js environment
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
+# 2. Set up Node.js environment
+- name: Set up Node.js
+uses: actions/setup-node@v4
+with:
+node-version: '20'
+cache: 'npm'
 
-      # 3. Install project dependencies
-      - name: Install Dependencies
-        run: npm ci
+# 3. Download the core SDK tools onto the GitHub runner
+- name: Install Project Node Dependencies
+run: npm ci
 
-      # 4. Authenticate Now SDK with the TEST instance using OAuth
-      - name: Authenticate with TEST Instance
-        run: |
-          npx now-sdk auth \
-            --host "${{ secrets.SN_SDK_TEST_INSTANCE_URL }}" \
-            --auth-type "${{ secrets.SN_SDK_TEST_AUTH_TYPE }}" \
-            --client-id "${{ secrets.SN_SDK_TEST_OAUTH_CLIENT_ID }}" \
-            --client-secret "${{ secrets.SN_SDK_TEST_OAUTH_CLIENT_SECRET }}"
+# 4. Compile the ServiceNow Fluent app code locally to verify it builds
+- name: Build ServiceNow Application
+run: npx now-sdk build
 
-      # 5. Compile and install the app to the productdemo Instance
-      - name: Install App to TEST
-        run: |
-          npx now-sdk install --host "${{ secrets.SN_SDK_TEST_INSTANCE_URL }}"
+# 5. Authenticate with the target instance using OAuth
+- name: Authenticate with TEST Instance
+run: |
+npx now-sdk auth \
+--host "${{ secrets.SN_SDK_TEST_INSTANCE_URL }}" \
+--auth-type "${{ secrets.SN_SDK_TEST_AUTH_TYPE }}" \
+--client-id "${{ secrets.SN_SDK_TEST_OAUTH_CLIENT_ID }}" \
+--client-secret "${{ secrets.SN_SDK_TEST_OAUTH_CLIENT_SECRET }}"
+
+# 6. Deploy the compiled package onto productdemo
+- name: Install App to TEST
+run: |
+npx now-sdk install --host "${{ secrets.SN_SDK_TEST_INSTANCE_URL }}"
