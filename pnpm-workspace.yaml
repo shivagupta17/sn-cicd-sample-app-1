@@ -2,15 +2,15 @@ packages:
   - "."
 
 allowBuilds:
-  - "@parcel/watcher"
-  - "@swc/core"
-  - "esbuild"
-  - "libxmljs2"
-  - "onnxruntime-node"
-  - "protobufjs"
-  - "sharp"
-  - "@servicenow/aiux-components-condition-builder"
-  - "@servicenow/aiux-document-viewer"
-  - "core-js"
-  - "isolated-vm"
-  - "sn-http-request"
+  "@parcel/watcher": true
+  "@swc/core": true
+  "esbuild": true
+  "libxmljs2": true
+  "onnxruntime-node": true
+  "protobufjs": true
+  "sharp": true
+  "@servicenow/aiux-components-condition-builder": true
+  "@servicenow/aiux-document-viewer": true
+  "core-js": true
+  "isolated-vm": true
+  "sn-http-request": true
