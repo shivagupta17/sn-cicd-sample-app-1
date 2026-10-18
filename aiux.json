@@ -1,0 +1,11 @@
+{
+  "name": "CICD sample 1",
+  "basename": "cicd-sample-1",
+  "landing": "/home",
+  "development": {
+    "token": ""
+  },
+  "build": {
+    "exclude": ["**/*.test.js", "**/test/**"]
+  }
+}
