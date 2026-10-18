@@ -1,0 +1,16 @@
+packages:
+  - "."
+
+allowedBuilds:
+  - "@parcel/watcher"
+  - "@swc/core"
+  - "esbuild"
+  - "libxmljs2"
+  - "onnxruntime-node"
+  - "protobufjs"
+  - "sharp"
+  - "@servicenow/aiux-components-condition-builder"
+  - "@servicenow/aiux-document-viewer"
+  - "core-js"
+  - "isolated-vm"
+  - "sn-http-request"
