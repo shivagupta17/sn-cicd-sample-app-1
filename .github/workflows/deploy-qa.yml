@@ -17,13 +17,13 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # 2. Setup pnpm package manager matching your exact local version (v12)
+      # 2. Setup pnpm package manager matching your local setup
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
           version: 12
 
-      # 3. Set up Node.js environment matching engine restrictions (Node >= 24)
+      # 3. Set up Node.js environment matching engine restrictions (Node 24)
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
@@ -38,19 +38,16 @@ jobs:
       - name: Build ServiceNow Application
         run: pnpm run build
 
-      # 6. Authenticate with the TEST instance using the new syntax format
-      - name: Authenticate with TEST Instance
+      # 6. Inline OAuth Handshake (Replaces the action.yml entirely)
+      - name: Configure OAuth Authentication Environment
         run: |
-          npx now-sdk auth --add "${{ secrets.SN_SDK_TEST_INSTANCE_URL }}" \
-            --type "${{ secrets.SN_SDK_TEST_AUTH_TYPE }}" \
-            --alias "test-instance" \
-            --username "NotRequiredForOAuth" \
-            --password "NotRequiredForOAuth"
-          
-          # Set the newly added alias as the active choice for the installer
-          npx now-sdk auth --use "test-instance"
+          echo "SN_SDK_NODE_ENV=SN_SDK_CI_INSTALL" >> "$GITHUB_ENV"
+          echo "SN_SDK_AUTH_TYPE=${{ vars.SN_SDK_TEST_AUTH_TYPE }}" >> "$GITHUB_ENV"
+          echo "SN_SDK_INSTANCE_URL=${{ vars.SN_SDK_TEST_INSTANCE_URL }}" >> "$GITHUB_ENV"
+          echo "SN_SDK_OAUTH_CLIENT_ID=${{ secrets.SN_SDK_TEST_OAUTH_CLIENT_ID }}" >> "$GITHUB_ENV"
+          echo "SN_SDK_OAUTH_CLIENT_SECRET=${{ secrets.SN_SDK_TEST_OAUTH_CLIENT_SECRET }}" >> "$GITHUB_ENV"
 
-      # 7. Deploy the compiled package onto productdemo
+      # 7. Deploy using the explicit host parameter so the SDK catches the OAuth environment variables
       - name: Install App to TEST
         run: |
-          npx now-sdk install --host "${{ secrets.SN_SDK_TEST_INSTANCE_URL }}"
+          npx @servicenow/sdk install --host "${{ vars.SN_SDK_TEST_INSTANCE_URL }}"
