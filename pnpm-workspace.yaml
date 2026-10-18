@@ -1,7 +1,7 @@
 packages:
   - "."
 
-allowedBuilds:
+allowBuilds:
   - "@parcel/watcher"
   - "@swc/core"
   - "esbuild"
