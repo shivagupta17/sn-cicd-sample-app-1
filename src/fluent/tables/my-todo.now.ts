@@ -18,6 +18,7 @@ export const x_snc_sample1_my_todo = Table({
         state: ChoiceColumn({
             label: 'State',
             choices: {
+                draft: 'Draft',
                 pending: 'Pending',
                 in_progress: 'In Progress',
                 complete: 'Complete',
